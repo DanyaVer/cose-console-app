@@ -7,23 +7,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 namespace Game1.Timer
 {
     public class GameTimer
-    {       
-        public ulong time;
+    {
+        public static ulong time = 0;
 
-        #region Constructor
-        public GameTimer(ulong time = 0)
-        {
-            this.time = time;
-        }
-        #endregion
-
-        public void MakeTimer()
+        public void MakeTimer(GameMaze game)
         {
             time = 0;
-            while (true)
+            while (game.gameRunning && !game.isTheLevelPassed)
             {
                 Thread.Sleep(TimeSpan.FromMilliseconds(1));
                 time++;
@@ -37,7 +31,7 @@ namespace Game1.Timer
             miliseconds = time % 100;
             seconds = time / 100 % 100;
             minutes = time / 10000;
-            if (miliseconds == 60)
+            if (miliseconds == 99)
             {
                 seconds++;
                 miliseconds = 0;
@@ -52,21 +46,27 @@ namespace Game1.Timer
             lock (GameMaze.locker)
             {
                 Console.SetCursorPosition(0, Constants.SCENE_HEIGHT + 2);
-                if (minutes < 10)
-                    Console.Write("0" + Convert.ToString(minutes) + ".");
-                else
-                    Console.Write(Convert.ToString(minutes) + ".");
-                
-                if (seconds < 10)
-                    Console.Write("0" + Convert.ToString(seconds) + ".");
-                else
-                    Console.Write(Convert.ToString(seconds) + ".");
-
-                if (miliseconds < 10)
-                    Console.Write("0" + Convert.ToString(miliseconds));
-                else
-                    Console.Write(Convert.ToString(miliseconds));
+                WriteTime((int)miliseconds, (int)seconds, (int)minutes);
             }
+
+        }
+        public static void WriteTime(int miliseconds, int seconds, int minutes)
+        {
+            if (minutes < 10)
+                Console.Write("0" + Convert.ToString(minutes) + ".");
+            else
+                Console.Write(Convert.ToString(minutes) + ".");
+
+            if (seconds < 10)
+                Console.Write("0" + Convert.ToString(seconds) + ".");
+            else
+                Console.Write(Convert.ToString(seconds) + ".");
+
+            if (miliseconds < 10)
+                Console.Write("0" + Convert.ToString(miliseconds));
+            else
+                Console.Write(Convert.ToString(miliseconds));
+            Console.WriteLine("\n");
         }
     }
 }

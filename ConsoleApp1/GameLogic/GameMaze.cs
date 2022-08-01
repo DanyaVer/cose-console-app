@@ -1,5 +1,7 @@
 ﻿using Game1.Assets;
 using Game1.GameLogic.MazeCreation;
+using Game1.Helpers;
+using Game1.Timer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,13 @@ namespace Game1.GameLogic
         public bool gameRunning;
         public bool keepPlaying;
         public bool isTheLevelPassed;
+        public bool IsWinWayPossible;
         public int chosenOption;
         public int chosenGameOverOption;
         public int gameLevel;
 
         public int score;
+        //public timeStruct<int, int, int> scoreTime;
         public string WinOrNot;
 
         public int walkerPosX;
@@ -36,9 +40,10 @@ namespace Game1.GameLogic
             char walkerCharacter = '■',
             int walkerPosX = 1, int walkerPosY = 1,
             bool gameRunning = true, bool keepPlaying = true,
-            bool isTheLevelPassed = false, int chosenOption = 1,
-            int chosenGameOverOption = 1,
+            bool isTheLevelPassed = false, bool IsWinWayPossible = true,
+            int chosenOption = 1, int chosenGameOverOption = 1,
             int gameLevel = 3, int score = 0,
+            //timeStruct<int, int, int> scoreTime = { 0, 0, 0 },
             string winOrNot = "") : base(walkerCharacter: walkerCharacter)
         {
 
@@ -49,10 +54,12 @@ namespace Game1.GameLogic
             this.gameRunning = gameRunning;
             this.keepPlaying = keepPlaying;
             this.isTheLevelPassed = isTheLevelPassed;
+            this.IsWinWayPossible = IsWinWayPossible;
             this.chosenOption = chosenOption;
             this.chosenGameOverOption = chosenGameOverOption;
             this.gameLevel = gameLevel;
             this.score = score;
+            //this.scoreTime = scoreTime;
             this.WinOrNot = winOrNot;
         }
         #endregion
@@ -65,6 +72,7 @@ namespace Game1.GameLogic
             walkerPosY = 1;
             score = 0;
             isTheLevelPassed = false;
+            IsWinWayPossible = true;
         }
         private void PressEnterToContinue()
         {
@@ -208,6 +216,8 @@ namespace Game1.GameLogic
             sceneIsUsed = new bool[Constants.SCENE_HEIGHT, Constants.SCENE_WIDTH];
 
             Build();
+            if (!IsWinWayPossible)
+                InitializeScene();
         }
         public void Render()
         {
@@ -246,6 +256,7 @@ namespace Game1.GameLogic
                             scene[walkerPosY, walkerPosX] = ' ';
                             walkerPosX--;
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
+                            score++;
                         }
                         else
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
@@ -258,6 +269,7 @@ namespace Game1.GameLogic
                             scene[walkerPosY, walkerPosX] = ' ';
                             walkerPosX++;
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
+                            score++;
                         }
                         else
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
@@ -270,6 +282,7 @@ namespace Game1.GameLogic
                             scene[walkerPosY, walkerPosX] = ' ';
                             walkerPosY++;
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
+                            score++;
                         }
                         else
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
@@ -282,6 +295,7 @@ namespace Game1.GameLogic
                             scene[walkerPosY, walkerPosX] = ' ';
                             walkerPosY--;
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
+                            score++;
                         }
                         else
                             scene[walkerPosY, walkerPosX] = walkerCharacter;
@@ -301,11 +315,18 @@ namespace Game1.GameLogic
         }
         public void GameOverScreen()
         {
+            timeStruct<int, int, int> scoreTime = new timeStruct<int, int, int>();
+            scoreTime.miliseconds = (int)GameTimer.time % 100;
+            scoreTime.seconds = (int)GameTimer.time / 100 % 100;
+            scoreTime.minutes = (int)GameTimer.time / 10000;
             Console.SetCursorPosition(0, 0);
             string[] beginnings = { "   ", "   ", "   " };
             beginnings[chosenGameOverOption - 1] = " > ";
             Console.WriteLine(WinOrNot);
             Console.WriteLine($"Count of steps: {score}\n");
+            
+            Console.Write($"Spent time: ");
+            GameTimer.WriteTime(scoreTime.miliseconds, scoreTime.seconds, scoreTime.minutes);
             Console.WriteLine(beginnings[0] + "Play Again\n");
             Console.WriteLine(beginnings[1] + "Choose difficulty level\n");
             Console.WriteLine(beginnings[2] + "Exit\n");

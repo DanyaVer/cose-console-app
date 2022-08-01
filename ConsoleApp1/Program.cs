@@ -10,9 +10,9 @@ using Game1.Timer;
 namespace Game1
 {
     class Program
-    {        
+    {
         public static void Main(string[] args)
-        {            
+        {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.CursorVisible = false;
 
@@ -30,11 +30,11 @@ namespace Game1
         private static void GameLoop(GameMaze game)
         {
             GameTimer t = new GameTimer();
-            Thread threadTimer = new Thread(() => t.MakeTimer());
 
             game.LaunchScreen();
             while (game.keepPlaying)
             {
+                Thread threadTimer = new Thread(() => t.MakeTimer(game));
                 game.InitializeScene();
                 Console.Clear();
                 game.Render();
@@ -55,7 +55,6 @@ namespace Game1
                 {
                     ConsoleKey key = Console.ReadKey(true).Key;
                     Console.Clear();
-
                     game.WinOrNot = "You passed The Maze!\n";
                     game.GameOverScreen();
                 }

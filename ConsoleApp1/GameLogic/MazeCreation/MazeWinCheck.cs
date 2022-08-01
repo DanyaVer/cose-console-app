@@ -79,9 +79,15 @@ namespace Game1.GameLogic.MazeCreation
                         MakeAnObstacle(ref scene, ref sceneIsUsed, ref wayX, ref wayY);
                 }
             }
+            if (countOfIteretions == 10000)
+            {
+                GameMaze temp = new GameMaze();
+                temp.IsWinWayPossible = false;
+
+            }
             scene[Constants.SCENE_HEIGHT - 2, Constants.SCENE_WIDTH - 2] = '+';
             sceneIsUsed[Constants.SCENE_HEIGHT - 2, Constants.SCENE_WIDTH - 2] = true;
-            Console.WriteLine(countOfIteretions);
+            //Console.WriteLine(countOfIteretions);
             //Console.Read();
         }
 
