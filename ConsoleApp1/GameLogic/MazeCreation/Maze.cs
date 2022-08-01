@@ -14,8 +14,6 @@ namespace Game1.GameLogic.MazeCreation
         public bool[,] sceneIsUsed;
 
         public char walkerCharacter;
-        public int walkerPosX;
-        public int walkerPosY;     
         #endregion
 
         public Maze()
@@ -25,11 +23,9 @@ namespace Game1.GameLogic.MazeCreation
             MazeWinCheck = new MazeWinCheck();
         }
 
-        public Maze(char walkerCharacter, int walkerPosX, int walkerPosY) : this()
+        public Maze(char walkerCharacter) : this()
         {
             this.walkerCharacter = walkerCharacter;
-            this.walkerPosX = walkerPosX;
-            this.walkerPosY = walkerPosY;
         }
 
         public MazeMaker MazeMaker { get; set; }
